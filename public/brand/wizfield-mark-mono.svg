@@ -1,0 +1,18 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">WIZFIELD monochrome W mark</title>
+  <desc id="desc">A one-color connected W-shaped intelligence graph mark.</desc>
+  <rect width="128" height="128" rx="28" fill="#F8FAFC"/>
+  <path d="M24 32L42 94L64 58L86 94L104 32" stroke="#172033" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M42 94L51 70L64 58L76 70L86 94" stroke="#172033" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.72"/>
+  <g fill="#F8FAFC" stroke="#172033" stroke-width="5">
+    <circle cx="24" cy="32" r="9"/>
+    <circle cx="42" cy="94" r="9"/>
+    <circle cx="64" cy="58" r="7"/>
+    <circle cx="86" cy="94" r="9"/>
+    <circle cx="104" cy="32" r="9"/>
+  </g>
+  <g fill="#F8FAFC" stroke="#172033" stroke-width="3" opacity="0.9">
+    <circle cx="51" cy="70" r="4"/>
+    <circle cx="76" cy="70" r="4"/>
+  </g>
+</svg>

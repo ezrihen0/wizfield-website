@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import type { Cta, PageContent, Section, Visual } from "@/lib/site-content";
 import { navItems, pages, primaryCta } from "@/lib/site-content";
@@ -16,10 +17,7 @@ export function MarketingHeader() {
     <header className="sticky top-0 z-50 border-b border-[var(--wf-border-faint)] bg-[rgba(248,250,252,0.82)] backdrop-blur-xl">
       <div className="wf-container flex min-h-20 items-center justify-between gap-5">
         <Link href="/" className="flex items-center gap-3" aria-label="WIZFIELD home">
-          <span className="grid h-11 w-11 place-items-center rounded-2xl wf-glass text-lg font-black text-[var(--wf-indigo)] shadow-[var(--wf-glow-cyan)]">
-            W
-          </span>
-          <span className="text-lg font-black tracking-[0.18em] text-[var(--wf-text-primary)]">WIZFIELD</span>
+          <BrandLogo variant="header" />
         </Link>
         <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary navigation">
           {navItems.map((item) => (
@@ -92,8 +90,7 @@ export function MarketingFooter() {
       <div className="wf-container grid gap-10 lg:grid-cols-[1.2fr_2fr]">
         <div>
           <div className="mb-4 flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl wf-glass text-base font-black text-[var(--wf-indigo)]">W</span>
-            <span className="font-black tracking-[0.18em]">WIZFIELD</span>
+            <BrandLogo variant="footer" />
           </div>
           <p className="max-w-md text-sm leading-6 text-[var(--wf-text-secondary)]">
             The intelligent operating system for field-service businesses.
@@ -120,6 +117,26 @@ export function MarketingFooter() {
         WIZFIELD marketing website implementation pass. Terms and Privacy destinations remain owner inputs.
       </div>
     </footer>
+  );
+}
+
+function BrandLogo({ variant }: { variant: "header" | "footer" }) {
+  return (
+    <span
+      className={cx(
+        "relative block overflow-hidden",
+        variant === "header" ? "h-9 w-40 sm:h-10 sm:w-52" : "h-9 w-40",
+      )}
+    >
+      <Image
+        src="/brand/wizfield-logo-horizontal.svg"
+        alt="WIZFIELD"
+        fill
+        priority={variant === "header"}
+        sizes={variant === "header" ? "(min-width: 640px) 208px, 160px" : "160px"}
+        className="object-contain object-left"
+      />
+    </span>
   );
 }
 
@@ -261,30 +278,7 @@ function AssetPlaceholder({ visual, large = false }: { visual: Visual; large?: b
     return visualComponent;
   }
 
-  return (
-    <div className={cx("relative rounded-[var(--wf-radius-xl)] p-5 wf-glass-strong", large ? "min-h-[430px]" : "min-h-[300px]")}>
-      <div className="absolute inset-5 rounded-[calc(var(--wf-radius-xl)-8px)] border border-[var(--wf-border-faint)] bg-[var(--wf-gradient-soft)] opacity-60" />
-      <div className="relative z-10 flex h-full min-h-[260px] flex-col justify-between rounded-[var(--wf-radius-lg)] border border-white/80 bg-white/70 p-5">
-        <div>
-          <p className="mb-3 inline-flex rounded-full bg-white/80 px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-[var(--wf-indigo)]">
-            Asset Placeholder
-          </p>
-          <h2 className="text-2xl font-black tracking-tight text-[var(--wf-text-primary)]">{visual.title}</h2>
-          <p className="mt-3 text-sm leading-6 text-[var(--wf-text-secondary)]">{visual.summary}</p>
-        </div>
-        <div className="mt-8 grid gap-3">
-          <div className="rounded-2xl border border-[var(--wf-border-faint)] bg-white/80 p-4">
-            <code className="break-all text-xs font-bold text-[var(--wf-indigo)]">{visual.id}</code>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <span className="h-16 rounded-2xl bg-white/80 shadow-sm" />
-            <span className="h-16 rounded-2xl bg-white/70 shadow-sm" />
-            <span className="h-16 rounded-2xl bg-white/60 shadow-sm" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <UniversalVisual visual={visual} large={large} />;
 }
 
 function renderNativeVisual(visual: Visual, large: boolean) {
@@ -713,6 +707,303 @@ function FinalCtaWizfieldMotif() {
       ))}
     </div>
   );
+}
+
+function UniversalVisual({ visual, large = false }: { visual: Visual; large?: boolean }) {
+  const id = visual.id;
+  const category = getVisualCategory(id);
+
+  if (id.includes("final-cta") || visual.kind === "motif") {
+    return <UniversalMotifVisual visual={visual} />;
+  }
+
+  if (visual.kind === "flow" || id.includes("flow") || id.includes("rail") || id.includes("diagram") || id.includes("map")) {
+    return <UniversalFlowVisual visual={visual} large={large} category={category} />;
+  }
+
+  if (visual.kind === "mockup") {
+    return <UniversalMockupVisual visual={visual} large={large} category={category} />;
+  }
+
+  if (visual.kind === "cards" || visual.kind === "trust") {
+    return <UniversalCardVisual visual={visual} large={large} category={category} />;
+  }
+
+  return <UniversalCardVisual visual={visual} large={large} category={category} />;
+}
+
+function getVisualCategory(id: string) {
+  if (id.includes("ai")) return "ai";
+  if (id.includes("growth")) return "growth";
+  if (id.includes("language")) return "language";
+  if (id.includes("multibusiness")) return "multi-business";
+  if (id.includes("pricing")) return "pricing";
+  if (id.includes("features")) return "features";
+  if (id.includes("contact")) return "contact";
+  if (id.includes("platform")) return "platform";
+  if (id.includes("docs")) return "docs";
+  return "home";
+}
+
+function UniversalVisualHeader({ visual, eyebrow }: { visual: Visual; eyebrow: string }) {
+  return (
+    <div>
+      <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--wf-indigo)]">{eyebrow}</p>
+      <h3 className="mt-2 text-xl font-black tracking-tight text-[var(--wf-text-primary)]">{visual.title}</h3>
+      <p className="mt-2 text-sm leading-6 text-[var(--wf-text-secondary)]">{visual.summary}</p>
+    </div>
+  );
+}
+
+function UniversalFlowVisual({ visual, large, category }: { visual: Visual; large: boolean; category: string }) {
+  const steps = getFlowSteps(visual.id, category);
+  const footnote = getTruthFootnote(visual.id, category);
+
+  return (
+    <NativeVisualShell label={visual.title} className={cx("min-h-[300px]", large && "min-h-[430px]")} >
+      <div data-asset-id={visual.id} className="grid gap-6">
+        <UniversalVisualHeader visual={visual} eyebrow={getCategoryEyebrow(category)} />
+        {visual.id.includes("system-map") || visual.id.includes("central-system") || visual.id.includes("capability-map") ? (
+          <HubVisual center={getHubLabel(category)} nodes={steps} />
+        ) : visual.id.includes("fragmentation") ? (
+          <FragmentationVisual />
+        ) : (
+          <FlowVisual steps={steps} footnote={footnote} />
+        )}
+      </div>
+    </NativeVisualShell>
+  );
+}
+
+function UniversalMockupVisual({ visual, large, category }: { visual: Visual; large: boolean; category: string }) {
+  const cards = getMockupCards(visual.id, category);
+
+  return (
+    <NativeVisualShell label={visual.title} className={cx("min-h-[320px]", large && "min-h-[430px]")}>
+      <div data-asset-id={visual.id} className="grid gap-5">
+        <UniversalVisualHeader visual={visual} eyebrow={getCategoryEyebrow(category)} />
+        <ProductShell compact={!large}>
+          <div className="grid gap-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--wf-indigo)]">{getMockupContext(category)}</p>
+                <h4 className="mt-1 text-lg font-black tracking-tight text-[var(--wf-text-primary)]">{getMockupTitle(visual.id, category)}</h4>
+              </div>
+              <span className="rounded-full border border-[var(--wf-border-faint)] bg-white/80 px-3 py-1.5 text-xs font-bold text-[var(--wf-indigo)]">
+                {getStatusLabel(visual.id, category)}
+              </span>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {cards.map(([title, body], index) => (
+                <div key={`${visual.id}-${title}`} className="rounded-3xl border border-[var(--wf-border-faint)] bg-white/84 p-4 shadow-sm">
+                  <div className="flex items-start gap-3">
+                    <MiniStatusDot tone={index % 3 === 0 ? "cyan" : index % 3 === 1 ? "indigo" : "violet"} />
+                    <div>
+                      <p className="text-sm font-black text-[var(--wf-text-primary)]">{title}</p>
+                      <p className="mt-1 text-xs leading-5 text-[var(--wf-text-secondary)]">{body}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ProductShell>
+      </div>
+    </NativeVisualShell>
+  );
+}
+
+function UniversalCardVisual({ visual, large, category }: { visual: Visual; large: boolean; category: string }) {
+  const cards = getCardItems(visual.id, category);
+  const footnote = getTruthFootnote(visual.id, category);
+
+  return (
+    <NativeVisualShell label={visual.title} className={cx("min-h-[300px]", large && "min-h-[430px]")}>
+      <div data-asset-id={visual.id} className="grid gap-5">
+        <UniversalVisualHeader visual={visual} eyebrow={getCategoryEyebrow(category)} />
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map(([title, body, meta], index) => (
+            <article
+              key={`${visual.id}-${title}`}
+              className={cx(
+                "rounded-3xl border border-[var(--wf-border-faint)] bg-white/84 p-4 shadow-sm",
+                meta === "Recommended" && "ring-2 ring-[rgba(0,240,255,0.22)]",
+              )}
+            >
+              <div className="flex items-start gap-3">
+                <MiniStatusDot tone={meta === "Attention" ? "violet" : index % 2 ? "indigo" : "cyan"} />
+                <div>
+                  {meta && <p className="mb-1 text-[0.68rem] font-black uppercase tracking-[0.14em] text-[var(--wf-indigo)]">{meta}</p>}
+                  <h4 className="text-sm font-black text-[var(--wf-text-primary)]">{title}</h4>
+                  <p className="mt-2 text-xs leading-5 text-[var(--wf-text-secondary)]">{body}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+        {footnote && <p className="rounded-2xl bg-white/72 px-4 py-3 text-sm font-semibold text-[var(--wf-text-secondary)]">{footnote}</p>}
+      </div>
+    </NativeVisualShell>
+  );
+}
+
+function UniversalMotifVisual({ visual }: { visual: Visual }) {
+  return (
+    <NativeVisualShell label={visual.title} className="min-h-[260px]">
+      <div data-asset-id={visual.id} className="relative overflow-hidden rounded-[calc(var(--wf-radius-xl)-8px)] border border-[var(--wf-border-faint)] bg-white/76 p-6">
+        <FinalCtaWizfieldMotif />
+        <div className="relative z-10 max-w-xl">
+          <UniversalVisualHeader visual={visual} eyebrow="Brand motif" />
+          <p className="mt-5 rounded-full bg-white/82 px-4 py-2 text-sm font-bold text-[var(--wf-indigo)]">Connected W intelligence motif</p>
+        </div>
+      </div>
+    </NativeVisualShell>
+  );
+}
+
+function HubVisual({ center, nodes }: { center: string; nodes: string[] }) {
+  const left = nodes.slice(0, Math.ceil(nodes.length / 2));
+  const right = nodes.slice(Math.ceil(nodes.length / 2));
+
+  return (
+    <div className="grid gap-4 lg:grid-cols-[1fr_0.76fr_1fr] lg:items-center">
+      <div className="grid gap-3">{left.map((node) => <SystemMapNode key={node}>{node}</SystemMapNode>)}</div>
+      <div className="relative mx-auto grid h-40 w-40 place-items-center rounded-full border border-[rgba(0,240,255,0.28)] bg-white/86 shadow-[var(--wf-glow-cyan)]">
+        <div aria-hidden className="absolute inset-5 rounded-full border border-[rgba(112,0,255,0.18)]" />
+        <p className="max-w-28 text-center text-sm font-black tracking-tight text-[var(--wf-text-primary)]">{center}</p>
+      </div>
+      <div className="grid gap-3">{right.map((node) => <SystemMapNode key={node}>{node}</SystemMapNode>)}</div>
+    </div>
+  );
+}
+
+function FragmentationVisual() {
+  const fragments = ["Calls", "Jobs", "Estimates", "Invoices", "Follow-up", "Marketing"];
+
+  return (
+    <div className="grid gap-4 lg:grid-cols-[1fr_0.35fr_1fr] lg:items-center">
+      <div className="grid grid-cols-2 gap-3">
+        {fragments.map((fragment, index) => (
+          <div key={fragment} className={cx("rounded-3xl border border-[var(--wf-border-faint)] bg-white/78 p-4 shadow-sm", index % 2 === 1 && "lg:translate-y-4")}>
+            <p className="text-sm font-black text-[var(--wf-text-primary)]">{fragment}</p>
+            <p className="mt-1 text-xs text-[var(--wf-text-secondary)]">Separate tool context</p>
+          </div>
+        ))}
+      </div>
+      <div className="grid place-items-center">
+        <span aria-hidden className="h-px w-full bg-[var(--wf-gradient-core)] lg:h-28 lg:w-px" />
+      </div>
+      <div className="rounded-[var(--wf-radius-lg)] border border-[rgba(0,240,255,0.24)] bg-white/86 p-6 text-center shadow-[var(--wf-glow-cyan)]">
+        <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--wf-indigo)]">WIZFIELD</p>
+        <h4 className="mt-3 text-2xl font-black tracking-tight text-[var(--wf-text-primary)]">One operating core</h4>
+        <p className="mt-3 text-sm leading-6 text-[var(--wf-text-secondary)]">Records, workflow, follow-up, and growth context stay connected.</p>
+      </div>
+    </div>
+  );
+}
+
+function getCategoryEyebrow(category: string) {
+  const labels: Record<string, string> = {
+    ai: "Bounded intelligence",
+    growth: "Growth workflow",
+    language: "Language Store",
+    "multi-business": "Workspace control",
+    pricing: "Plan structure",
+    features: "Capability surface",
+    contact: "Contact path",
+    platform: "Operating system",
+    docs: "Documentation confidence",
+    home: "Homepage visual",
+  };
+
+  return labels[category] ?? "WIZFIELD visual";
+}
+
+function getHubLabel(category: string) {
+  if (category === "features") return "Capability Map";
+  if (category === "growth") return "Growth Center";
+  if (category === "platform") return "WIZFIELD Core";
+  return "WIZFIELD";
+}
+
+function getFlowSteps(id: string, category: string) {
+  if (id.includes("language") || category === "language") return ["Worker source text", "English draft", "Review", "Final chosen English"];
+  if (id.includes("growth") || category === "growth") return ["Signal", "Opportunity", "Draft", "Campaign", "Publish Job", "Internal Analytics"];
+  if (id.includes("guarded-send")) return ["Draft", "Review", "Edit or dismiss", "Confirm send", "Sent message anchor"];
+  if (id.includes("reply-observation")) return ["Sent message", "Same thread", "Inbound reply observed", "Read-only outcome"];
+  if (id.includes("switcher")) return ["Current workspace", "Choose workspace", "Session context changes", "Operating view refreshes"];
+  if (id.includes("billing")) return ["Billing account", "Covered organization", "Business records", "CRM invoices separate"];
+  if (id.includes("multibusiness") || category === "multi-business") return ["Identity", "Workspace A", "Workspace B", "Separated records", "Shared billing"];
+  if (id.includes("pricing")) return ["Starter", "Pro", "Business", "Add-ons", "Billing relationship"];
+  if (id.includes("ai") || category === "ai") return ["Workspace records", "Bounded AI surface", "Human review", "Explicit action"];
+  if (id.includes("features")) return ["Operations", "Communication", "Financial workflows", "AI", "Growth", "Workspace control"];
+  if (id.includes("platform") || category === "platform") return ["Calls & Intake", "Customers & Leads", "Jobs", "Estimates & Invoices", "Messaging", "Reports", "Portal", "Growth Center", "Workspace Control"];
+  return ["Call / Lead", "Customer", "Job", "Estimate", "Approval", "Invoice", "Follow-up", "Growth Opportunity"];
+}
+
+function getMockupCards(id: string, category: string): Array<[string, string]> {
+  if (category === "growth") return [["Marketing Profile", "Organization context"], ["Draft Variants", "GBP, Facebook, Instagram seed"], ["Campaign Board", "Slots and draft attachment"], ["Publish Jobs", "Explicit publish state"]];
+  if (category === "language") return [["Enabled Languages", "Organization-level setting"], ["Line Item Text", "Estimate and invoice scope"], ["English Draft", "Generated for review"], ["Snapshot Marker", "Approved output stays stable"]];
+  if (category === "multi-business") return [["Active Workspace", "North Ridge Services"], ["Customers", "Workspace scoped"], ["Jobs", "Workspace scoped"], ["Invoices", "Workspace scoped"]];
+  if (category === "features") return [["Customers & Leads", "Connected records"], ["Calls & Messaging", "Organization-scoped"], ["Estimates & Invoices", "Financial workflow"], ["Documents", "Stable context"]];
+  if (category === "contact") return [["Business Interest", "Sales-assisted path"], ["Starter / Pro", "Self-serve trial path"], ["Owner Input", "Backend destination pending"], ["No SLA Claim", "Response timing not promised"]];
+  if (category === "ai") return [["Business Brain", "Signals to review"], ["Copilot Draft", "Human review"], ["Guarded Send", "Explicit action"], ["Voice Pilot", "Escalation path"]];
+  if (category === "pricing") return [["Starter", "1 business"], ["Pro", "Up to 3 businesses"], ["Business", "Contact Sales"], ["Billing", "Separate from CRM invoices"]];
+  return [["Today", "Operating context"], ["Recent Calls", "Lead signal"], ["Estimate Follow-up", "Review queue"], ["Unpaid Invoice", "Verify before acting"]];
+}
+
+function getCardItems(id: string, category: string): Array<[string, string, string?]> {
+  if (id.includes("pricing") || category === "pricing") return [["Starter", "1 business with owner-approved price pending."], ["Pro", "Up to 3 businesses with recommendation treatment.", "Recommended"], ["Business", "Sales-assisted structure with Contact Sales."]];
+  if (id.includes("docs")) return [["Product documentation", "Structured product behavior and boundaries."], ["Operating boundaries", "Serious buyer confidence without fake API detail."], ["Docs destination", "External docs surface remains the source."]];
+  if (category === "ai") return [["Business Brain", "Workspace-scoped signals for review."], ["Operator Copilot", "Draft support with human control."], ["Voice Intake Intelligence — Pilot", "Script-bound handling and escalation."]];
+  if (category === "growth") return [["Opportunity", "CRM-derived signal to review."], ["Draft", "Publisher role develops content."], ["Publish Job", "Explicit publish-now or scheduled job."], ["Internal Analytics", "Bounded funnel signal, not ad ROI."]];
+  if (category === "language") return [["Worker language", "Organization-enabled preferences."], ["English draft", "Generated for review."], ["Final chosen English", "Saved after human review."], ["Snapshot-safe history", "Approved output does not rewrite later."]];
+  if (category === "multi-business") return [["Workspace A", "Separated business records."], ["Workspace B", "Separate active context."], ["Shared billing", "Commercial layer separate from CRM invoices."]];
+  if (category === "contact") return [["Business Plan Interest", "Sales-assisted path."], ["Multi-Business Operation", "Complex workspace fit."], ["Self-serve trial", "Starter and Pro remain visible."]];
+  if (category === "features") return [["Core Operations", "Customers, jobs, estimates, invoices."], ["Communication Context", "Calls and messaging tied to work."], ["Differentiators", "AI, Growth, Language, Multi-Business."]];
+  return [["Calls", "First signal captured."], ["Jobs", "Context moves forward."], ["Invoices", "Follow-up remains visible."]];
+}
+
+function getTruthFootnote(id: string, category: string) {
+  if (category === "ai") return "Human review stays in control. No silent outbound, self-learning, or autonomous dispatch is implied.";
+  if (category === "growth") return "Publishing is explicit. Analytics are internal and bounded, not ad ROI or guaranteed lead claims.";
+  if (category === "language") return "Language Store stays scoped to worker preferences and reviewed English output for supported estimate and invoice line flows.";
+  if (category === "multi-business") return "Workspaces remain separated. This visual does not imply blended records or cross-business intelligence.";
+  if (category === "pricing") return "No invented prices or trial duration. Business remains Contact Sales.";
+  if (category === "contact") return "The contact path remains honest: backend destination and response timing are owner inputs.";
+  if (id.includes("portal")) return "Customer access remains scoped and does not expose internal records.";
+  return undefined;
+}
+
+function getMockupContext(category: string) {
+  if (category === "growth") return "Marketing workspace";
+  if (category === "language") return "Language settings";
+  if (category === "multi-business") return "Active organization";
+  if (category === "contact") return "Commercial inquiry";
+  if (category === "pricing") return "Plan model";
+  if (category === "ai") return "AI support";
+  return "Product surface";
+}
+
+function getMockupTitle(id: string, category: string) {
+  if (id.includes("hero")) return "Hero product surface";
+  if (category === "growth") return "Growth Center workspace";
+  if (category === "language") return "Reviewed English workflow";
+  if (category === "multi-business") return "Separated workspace state";
+  if (category === "contact") return "Sales-fit surface";
+  if (category === "pricing") return "Plan structure";
+  if (category === "ai") return "Review-controlled intelligence";
+  return "Operational preview";
+}
+
+function getStatusLabel(id: string, category: string) {
+  if (category === "growth") return "Explicit publish";
+  if (category === "language") return "Review required";
+  if (category === "multi-business") return "Separated context";
+  if (category === "contact") return "No backend claim";
+  if (category === "pricing") return "Owner prices pending";
+  if (category === "ai") return "Human control";
+  return id.includes("hero") ? "Operating core" : "Product-led";
 }
 
 function PricingCards() {
