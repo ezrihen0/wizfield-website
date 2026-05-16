@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import type { Cta, PageContent, Section, Visual } from "@/lib/site-content";
 import { navItems, pages, primaryCta } from "@/lib/site-content";
@@ -156,6 +156,10 @@ function MarketingSection({ section, index }: { section: Section; index: number 
   const isCta = section.variant === "cta";
   const split = isHero || section.variant === "split" || section.variant === "form";
 
+  if (isCta && section.visual?.id === "wf-home-final-cta-w-motif") {
+    return <HomeFinalCtaSection section={section} />;
+  }
+
   return (
     <section
       id={section.id ?? (index === 2 ? "platform-thesis" : undefined)}
@@ -251,6 +255,12 @@ function FlowRail({ steps }: { steps: string[] }) {
 }
 
 function AssetPlaceholder({ visual, large = false }: { visual: Visual; large?: boolean }) {
+  const visualComponent = renderNativeVisual(visual, large);
+
+  if (visualComponent) {
+    return visualComponent;
+  }
+
   return (
     <div className={cx("relative rounded-[var(--wf-radius-xl)] p-5 wf-glass-strong", large ? "min-h-[430px]" : "min-h-[300px]")}>
       <div className="absolute inset-5 rounded-[calc(var(--wf-radius-xl)-8px)] border border-[var(--wf-border-faint)] bg-[var(--wf-gradient-soft)] opacity-60" />
@@ -273,6 +283,434 @@ function AssetPlaceholder({ visual, large = false }: { visual: Visual; large?: b
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function renderNativeVisual(visual: Visual, large: boolean) {
+  switch (visual.id) {
+    case "wf-home-hero-operating-system-composite":
+      return <HeroOperatingSystemComposite large={large} />;
+    case "wf-home-platform-system-map":
+      return <PlatformSystemMapVisual />;
+    case "wf-home-product-dashboard-preview":
+      return <ProductDashboardPreview />;
+    case "wf-home-ai-business-brain-preview-card":
+      return <AiIntelligenceCardSet />;
+    case "wf-home-growth-center-flow-visual":
+      return <GrowthCenterFlowVisual />;
+    case "wf-home-multibusiness-workspace-switcher":
+      return <MultiBusinessSwitcherVisual />;
+    case "wf-home-operational-journey-rail":
+      return <OperationalJourneyRail />;
+    default:
+      return null;
+  }
+}
+
+function NativeVisualShell({ children, className, label }: { children: ReactNode; className?: string; label: string }) {
+  return (
+    <div
+      className={cx(
+        "relative overflow-hidden rounded-[var(--wf-radius-xl)] border border-white/85 bg-white/72 p-4 shadow-[var(--wf-shadow-soft)] backdrop-blur-2xl",
+        className,
+      )}
+      aria-label={label}
+    >
+      <div aria-hidden className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[rgba(0,240,255,0.2)] blur-3xl" />
+      <div aria-hidden className="absolute -bottom-20 -left-16 h-56 w-56 rounded-full bg-[rgba(112,0,255,0.16)] blur-3xl" />
+      <div className="relative z-10">{children}</div>
+    </div>
+  );
+}
+
+function MiniStatusDot({ tone = "cyan" }: { tone?: "cyan" | "violet" | "indigo" }) {
+  const color =
+    tone === "violet"
+      ? "bg-[var(--wf-violet)] shadow-[var(--wf-glow-violet)]"
+      : tone === "indigo"
+        ? "bg-[var(--wf-indigo)]"
+        : "bg-[var(--wf-cyan)] shadow-[var(--wf-glow-cyan)]";
+
+  return <span aria-hidden className={cx("mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full", color)} />;
+}
+
+function ProductShell({ children, compact = false }: { children: ReactNode; compact?: boolean }) {
+  const nav = ["Home", "Customers", "Jobs", "Estimates", "Invoices", "Calls", "Marketing"];
+
+  return (
+    <div className="rounded-[calc(var(--wf-radius-xl)-6px)] border border-[var(--wf-border-faint)] bg-white/82 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+      <div className="flex items-center justify-between gap-3 border-b border-[var(--wf-border-faint)] px-4 py-3">
+        <div className="flex items-center gap-2">
+          <span className="h-3 w-3 rounded-full bg-[rgba(255,0,122,0.58)]" aria-hidden />
+          <span className="h-3 w-3 rounded-full bg-[rgba(99,102,241,0.5)]" aria-hidden />
+          <span className="h-3 w-3 rounded-full bg-[rgba(0,240,255,0.65)]" aria-hidden />
+        </div>
+        <p className="rounded-full border border-[var(--wf-border-faint)] bg-white/78 px-3 py-1 text-[0.68rem] font-black uppercase tracking-[0.16em] text-[var(--wf-indigo)]">
+          WIZFIELD
+        </p>
+      </div>
+      <div className={cx("grid", compact ? "gap-3 p-3" : "gap-4 p-4 sm:grid-cols-[0.34fr_1fr]")}>
+        <div className={cx("rounded-3xl border border-[var(--wf-border-faint)] bg-[rgba(248,250,252,0.78)] p-3", compact && "hidden sm:block")}>
+          <p className="mb-3 text-xs font-black uppercase tracking-[0.14em] text-[var(--wf-text-muted)]">Navigation</p>
+          <div className="grid gap-2">
+            {nav.map((item, index) => (
+              <span
+                key={item}
+                className={cx(
+                  "rounded-2xl px-3 py-2 text-xs font-bold",
+                  index === 0 ? "bg-white text-[var(--wf-indigo)] shadow-sm" : "text-[var(--wf-text-secondary)]",
+                )}
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div>{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function HeroOperatingSystemComposite({ large }: { large: boolean }) {
+  const cards = [
+    ["Today's Jobs", "Route and job context visible"],
+    ["Recent Calls", "Lead and customer signal attached"],
+    ["Estimates Awaiting Review", "Operator review queue"],
+    ["Unpaid Invoice Follow-up", "Verify before acting"],
+  ];
+
+  return (
+    <NativeVisualShell label="Homepage hero operating system composite" className={cx("min-h-[430px]", large && "lg:min-h-[520px]")}>
+      <div aria-hidden className="absolute left-8 top-10 hidden h-[78%] w-[84%] rounded-[2rem] border border-[rgba(0,240,255,0.22)] lg:block" />
+      <div aria-hidden className="absolute right-10 top-16 hidden h-px w-24 bg-[var(--wf-gradient-core)] lg:block" />
+      <ProductShell>
+        <div className="grid gap-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--wf-indigo)]">Home</p>
+              <h3 className="mt-1 text-xl font-black tracking-tight text-[var(--wf-text-primary)]">Operating Dashboard</h3>
+            </div>
+            <div className="rounded-2xl border border-[rgba(0,240,255,0.22)] bg-white/82 px-3 py-2 text-xs font-bold text-[var(--wf-text-secondary)] shadow-sm">
+              Active workspace: North Ridge Services
+            </div>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {cards.map(([title, body], index) => (
+              <div key={title} className="rounded-3xl border border-[var(--wf-border-faint)] bg-white/84 p-4 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <MiniStatusDot tone={index % 2 ? "violet" : "cyan"} />
+                  <div>
+                    <p className="text-sm font-black text-[var(--wf-text-primary)]">{title}</p>
+                    <p className="mt-1 text-xs leading-5 text-[var(--wf-text-secondary)]">{body}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ProductShell>
+      <div className="mt-4 grid gap-3 lg:-mt-10 lg:grid-cols-4">
+        {[
+          ["Business Brain", "3 operating signals need review"],
+          ["Operator Copilot", "Draft ready for review"],
+          ["Growth Center", "Opportunity → Draft"],
+          ["Workspace cue", "Active organization switcher"],
+        ].map(([title, body], index) => (
+          <div key={title} className="rounded-3xl border border-white/80 bg-white/78 p-4 shadow-[var(--wf-shadow-card)] backdrop-blur-xl">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--wf-indigo)]">{title}</p>
+            <p className="mt-2 text-sm font-bold leading-5 text-[var(--wf-text-primary)]">{body}</p>
+            <div className="mt-3 h-1.5 rounded-full bg-[rgba(99,102,241,0.12)]">
+              <span className={cx("block h-full rounded-full bg-[var(--wf-gradient-core)]", index === 3 ? "w-2/3" : "w-4/5")} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </NativeVisualShell>
+  );
+}
+
+function PlatformSystemMapVisual() {
+  const modules = ["Calls & Intake", "Customers & Leads", "Jobs", "Estimates & Invoices", "Messaging", "Reports", "Portal", "Growth Center", "Workspace Control"];
+
+  return (
+    <NativeVisualShell label="Homepage platform system map" className="min-h-[360px]">
+      <div className="grid gap-4 lg:grid-cols-[1fr_0.72fr_1fr] lg:items-center">
+        <div className="grid gap-3">
+          {modules.slice(0, 4).map((module) => (
+            <SystemMapNode key={module}>{module}</SystemMapNode>
+          ))}
+        </div>
+        <div className="relative mx-auto grid h-44 w-44 place-items-center rounded-full border border-[rgba(0,240,255,0.28)] bg-white/86 shadow-[var(--wf-glow-cyan)]">
+          <div aria-hidden className="absolute inset-5 rounded-full border border-[rgba(112,0,255,0.18)]" />
+          <div aria-hidden className="absolute -left-12 top-1/2 hidden h-px w-12 bg-[var(--wf-gradient-core)] lg:block" />
+          <div aria-hidden className="absolute -right-12 top-1/2 hidden h-px w-12 bg-[var(--wf-gradient-core)] lg:block" />
+          <div className="text-center">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--wf-indigo)]">WIZFIELD</p>
+            <p className="mt-2 text-lg font-black tracking-tight text-[var(--wf-text-primary)]">Operating Hub</p>
+          </div>
+        </div>
+        <div className="grid gap-3">
+          {modules.slice(4).map((module) => (
+            <SystemMapNode key={module}>{module}</SystemMapNode>
+          ))}
+        </div>
+      </div>
+    </NativeVisualShell>
+  );
+}
+
+function SystemMapNode({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex items-center gap-3 rounded-3xl border border-[var(--wf-border-faint)] bg-white/82 p-3 text-left shadow-sm">
+      <MiniStatusDot />
+      <span className="text-sm font-bold text-[var(--wf-text-primary)]">{children}</span>
+    </div>
+  );
+}
+
+function ProductDashboardPreview() {
+  return (
+    <NativeVisualShell label="Homepage product dashboard preview" className="min-h-[360px]">
+      <ProductShell>
+        <div className="grid gap-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--wf-indigo)]">Today</p>
+              <h3 className="mt-1 text-xl font-black tracking-tight text-[var(--wf-text-primary)]">Customer Context</h3>
+            </div>
+            <p className="rounded-full bg-[rgba(0,240,255,0.12)] px-3 py-1 text-xs font-bold text-[var(--wf-indigo)]">Next action visible</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[
+              ["Jobs", "Field work and schedule context"],
+              ["Recent Calls", "Call notes stay attached"],
+              ["Estimate Follow-up", "Review before customer action"],
+              ["Unpaid Invoice", "Workspace-scoped attention"],
+            ].map(([title, body]) => (
+              <div key={title} className="rounded-3xl border border-[var(--wf-border-faint)] bg-white/84 p-4 shadow-sm">
+                <p className="text-sm font-black text-[var(--wf-text-primary)]">{title}</p>
+                <p className="mt-2 text-xs leading-5 text-[var(--wf-text-secondary)]">{body}</p>
+                <div className="mt-4 h-2 rounded-full bg-[rgba(99,102,241,0.1)]">
+                  <span className="block h-full w-3/5 rounded-full bg-[var(--wf-gradient-core)]" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ProductShell>
+    </NativeVisualShell>
+  );
+}
+
+function AiIntelligenceCardSet() {
+  return (
+    <NativeVisualShell label="Homepage AI intelligence card set" className="min-h-[320px]">
+      <div className="grid gap-4 lg:grid-cols-3">
+        <BusinessBrainPreviewCard />
+        <OperatorCopilotDraftCard />
+        <VoicePilotCapsule />
+      </div>
+    </NativeVisualShell>
+  );
+}
+
+function BusinessBrainPreviewCard() {
+  return (
+    <article data-asset-id="wf-home-ai-business-brain-preview-card" className="rounded-3xl border border-[var(--wf-border-faint)] bg-white/84 p-5 shadow-sm">
+      <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--wf-indigo)]">Business Brain</p>
+      <h3 className="mt-2 text-xl font-black tracking-tight text-[var(--wf-text-primary)]">3 operating signals need review</h3>
+      <div className="mt-4 grid gap-3">
+        {["Unpaid invoice focus", "Stale estimate", "Follow-up reminder"].map((signal) => (
+          <div key={signal} className="flex items-center gap-3 rounded-2xl bg-[rgba(248,250,252,0.85)] p-3">
+            <MiniStatusDot />
+            <span className="text-sm font-semibold text-[var(--wf-text-secondary)]">{signal}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 rounded-full bg-[rgba(99,102,241,0.1)] px-3 py-2 text-center text-xs font-black text-[var(--wf-indigo)]">Verify before acting</p>
+    </article>
+  );
+}
+
+function OperatorCopilotDraftCard() {
+  return (
+    <article data-asset-id="wf-home-ai-operator-copilot-draft-card" className="rounded-3xl border border-[rgba(0,240,255,0.22)] bg-white/84 p-5 shadow-sm">
+      <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--wf-indigo)]">Operator Copilot</p>
+      <h3 className="mt-2 text-xl font-black tracking-tight text-[var(--wf-text-primary)]">Draft ready for review</h3>
+      <div className="mt-4 rounded-3xl border border-[var(--wf-border-faint)] bg-[rgba(248,250,252,0.86)] p-4">
+        <p className="text-xs font-bold text-[var(--wf-text-muted)]">SMS draft</p>
+        <p className="mt-2 text-sm leading-6 text-[var(--wf-text-primary)]">Hi, this is a follow-up on your service request. Please review and edit before sending.</p>
+      </div>
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <span className="text-xs font-semibold text-[var(--wf-text-secondary)]">Human review required</span>
+        <span className="rounded-full border border-[var(--wf-border-faint)] bg-white px-3 py-1.5 text-xs font-black text-[var(--wf-indigo)]">Review draft</span>
+      </div>
+    </article>
+  );
+}
+
+function VoicePilotCapsule() {
+  return (
+    <article data-asset-id="wf-home-voice-intake-pilot-capsule" className="rounded-3xl border border-[var(--wf-border-faint)] bg-white/84 p-5 shadow-sm">
+      <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--wf-indigo)]">Voice Intake Intelligence — Pilot</p>
+      <div className="mt-4 rounded-full border border-[rgba(0,240,255,0.22)] bg-[rgba(0,240,255,0.08)] px-4 py-3">
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-sm font-black text-[var(--wf-text-primary)]">Inbound call capsule</span>
+          <span aria-hidden className="h-3 w-3 rounded-full bg-[var(--wf-cyan)] shadow-[var(--wf-glow-cyan)]" />
+        </div>
+      </div>
+      <div className="mt-4 grid gap-3">
+        {["Script-bound handling", "Escalate to human"].map((item) => (
+          <div key={item} className="flex items-center gap-3 rounded-2xl bg-[rgba(248,250,252,0.86)] p-3">
+            <MiniStatusDot tone="violet" />
+            <span className="text-sm font-semibold text-[var(--wf-text-secondary)]">{item}</span>
+          </div>
+        ))}
+      </div>
+    </article>
+  );
+}
+
+function GrowthCenterFlowVisual() {
+  return (
+    <NativeVisualShell label="Homepage Growth Center flow visual" className="min-h-[320px]">
+      <FlowVisual
+        steps={["Signal", "Opportunity", "Draft", "Campaign", "Publish Job", "Internal Analytics"]}
+        footnote="Publishing is explicit. Analytics are internal funnel signals, not ad ROI."
+      />
+    </NativeVisualShell>
+  );
+}
+
+function OperationalJourneyRail() {
+  return (
+    <NativeVisualShell label="Homepage operational journey rail" className="mx-auto mt-10 min-h-[260px] max-w-6xl">
+      <FlowVisual steps={["Call / Lead", "Customer", "Job", "Estimate", "Approval", "Invoice", "Follow-up", "Growth Opportunity"]} />
+    </NativeVisualShell>
+  );
+}
+
+function FlowVisual({ steps, footnote }: { steps: string[]; footnote?: string }) {
+  return (
+    <div>
+      <div className="grid gap-3 md:grid-cols-[repeat(var(--step-count),minmax(0,1fr))]" style={{ "--step-count": steps.length } as CSSProperties}>
+        {steps.map((step, index) => (
+          <div key={step} className="relative rounded-3xl border border-[var(--wf-border-faint)] bg-white/84 p-4 shadow-sm">
+            {index < steps.length - 1 && <span aria-hidden className="absolute left-full top-1/2 hidden h-px w-3 bg-[var(--wf-gradient-core)] md:block" />}
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--wf-text-muted)]">Step {index + 1}</p>
+            <p className="mt-2 text-sm font-black text-[var(--wf-text-primary)]">{step}</p>
+          </div>
+        ))}
+      </div>
+      {footnote && <p className="mt-5 rounded-2xl bg-white/72 px-4 py-3 text-sm font-semibold text-[var(--wf-text-secondary)]">{footnote}</p>}
+    </div>
+  );
+}
+
+function MultiBusinessSwitcherVisual() {
+  return (
+    <NativeVisualShell label="Homepage multi-business workspace switcher" className="min-h-[340px]">
+      <div className="grid gap-4 lg:grid-cols-[0.45fr_1fr]">
+        <div className="rounded-3xl border border-[var(--wf-border-faint)] bg-white/84 p-4 shadow-sm">
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--wf-indigo)]">Active workspace</p>
+          <div className="mt-4 grid gap-3">
+            {["North Ridge Services", "Eastside HVAC", "Summit Field Co."].map((workspace, index) => (
+              <div
+                key={workspace}
+                className={cx(
+                  "rounded-2xl border p-3 text-sm font-bold",
+                  index === 0 ? "border-[rgba(0,240,255,0.3)] bg-[rgba(0,240,255,0.1)] text-[var(--wf-text-primary)]" : "border-[var(--wf-border-faint)] bg-white/72 text-[var(--wf-text-secondary)]",
+                )}
+              >
+                {workspace}
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-xs font-semibold leading-5 text-[var(--wf-text-muted)]">Switching is explicit. Business records stay separated.</p>
+        </div>
+        <div className="rounded-3xl border border-[var(--wf-border-faint)] bg-white/84 p-4 shadow-sm">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--wf-indigo)]">North Ridge Services</p>
+              <h3 className="mt-1 text-xl font-black tracking-tight text-[var(--wf-text-primary)]">Workspace dashboard</h3>
+            </div>
+            <span className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[var(--wf-indigo)]">Context refreshed</span>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            {["Customers", "Jobs", "Invoices"].map((label) => (
+              <div key={label} className="rounded-2xl border border-[var(--wf-border-faint)] bg-[rgba(248,250,252,0.84)] p-3">
+                <p className="text-sm font-black text-[var(--wf-text-primary)]">{label}</p>
+                <p className="mt-2 text-xs leading-5 text-[var(--wf-text-secondary)]">Active workspace only</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </NativeVisualShell>
+  );
+}
+
+function HomeFinalCtaSection({ section }: { section: Section }) {
+  return (
+    <section className="relative overflow-hidden py-20">
+      <div className="wf-hero-ambient" />
+      <div className="wf-container relative z-10">
+        <div className="relative overflow-hidden rounded-[var(--wf-radius-xl)] border border-white/85 bg-white/78 px-6 py-14 text-center shadow-[var(--wf-shadow-soft)] backdrop-blur-2xl md:px-12">
+          <FinalCtaWizfieldMotif />
+          <div className="relative z-10 mx-auto max-w-3xl">
+            {section.eyebrow && <SectionEyebrow>{section.eyebrow}</SectionEyebrow>}
+            <h2 className="mt-4 text-3xl font-black leading-tight tracking-[-0.045em] text-[var(--wf-text-primary)] md:text-5xl">{section.title}</h2>
+            {section.body && <p className="mt-5 text-lg leading-8 text-[var(--wf-text-secondary)]">{section.body}</p>}
+            {section.ctas && (
+              <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+                {section.ctas.map((cta) => (
+                  <CtaButton key={`${cta.label}-${cta.href}`} cta={cta} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FinalCtaWizfieldMotif() {
+  const nodes = [
+    ["12%", "22%"],
+    ["25%", "66%"],
+    ["40%", "34%"],
+    ["52%", "68%"],
+    ["66%", "34%"],
+    ["78%", "66%"],
+    ["90%", "22%"],
+  ];
+
+  return (
+    <div data-asset-id="wf-home-final-cta-w-motif" className="absolute inset-0" aria-hidden>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,240,255,0.18),transparent_35%),radial-gradient(circle_at_72%_24%,rgba(112,0,255,0.14),transparent_34%)]" />
+      <svg className="absolute inset-x-0 top-1/2 h-52 w-full -translate-y-1/2 opacity-70" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <polyline points="12,22 25,66 40,34 52,68 66,34 78,66 90,22" fill="none" stroke="url(#homeWGradient)" strokeWidth="1.1" />
+        <defs>
+          <linearGradient id="homeWGradient" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stopColor="rgba(0,240,255,0.65)" />
+            <stop offset="52%" stopColor="rgba(99,102,241,0.48)" />
+            <stop offset="100%" stopColor="rgba(112,0,255,0.6)" />
+          </linearGradient>
+        </defs>
+      </svg>
+      {nodes.map(([left, top], index) => (
+        <span
+          key={`${left}-${top}`}
+          className={cx(
+            "absolute h-3 w-3 rounded-full border border-white bg-[var(--wf-cyan)] shadow-[var(--wf-glow-cyan)]",
+            index % 2 === 0 && "bg-[var(--wf-violet)] shadow-[var(--wf-glow-violet)]",
+          )}
+          style={{ left, top }}
+        />
+      ))}
     </div>
   );
 }
