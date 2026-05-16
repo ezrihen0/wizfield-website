@@ -37,7 +37,7 @@ export const navItems = [
   { label: "Growth Center", href: "/growth-center" },
   { label: "Language Store", href: "/language-store" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Docs", href: "https://docs.wizfield.com" },
+  { label: "Docs", href: "https://docs.wizfield.com/" },
 ];
 
 export const primaryCta: Cta = { label: "Start Trial", href: "/pricing", variant: "primary" };
@@ -251,7 +251,7 @@ export const homePage: PageContent = {
       eyebrow: "Product Confidence",
       title: "Built like a real platform. Documented like one.",
       body: "WIZFIELD includes product documentation so serious buyers and operators can understand the system, its workflows, and its operating boundaries clearly.",
-      ctas: [{ label: "Explore Docs", href: "https://docs.wizfield.com", variant: "secondary" }, primaryCta],
+      ctas: [{ label: "Explore Docs", href: "https://docs.wizfield.com/", variant: "secondary" }, primaryCta],
       visual: {
         id: "wf-home-docs-preview-card",
         title: "Docs Preview Card",
@@ -840,7 +840,7 @@ const contactSections: Section[] = [
     eyebrow: "Contact Routing",
     title: "Form submission wiring remains a launch integration item.",
     body: "Until the backend destination is connected, the contact form stays honest about its preview state and does not claim delivery.",
-    ctas: [{ label: "View Pricing", href: "/pricing", variant: "secondary" }, { label: "Explore Docs", href: "https://docs.wizfield.com", variant: "secondary" }],
+    ctas: [{ label: "View Pricing", href: "/pricing", variant: "secondary" }, { label: "Explore Docs", href: "https://docs.wizfield.com/", variant: "secondary" }],
     visual: { id: "wf-contact-post-submit-success-state", title: "Post-Submit Success State Visual", summary: "Static success-state visual reserved until backend is wired.", kind: "trust" },
     variant: "split",
   },

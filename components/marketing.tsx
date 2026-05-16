@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Cta, PageContent, Section, Visual } from "@/lib/site-content";
 import { navItems, pages, primaryCta } from "@/lib/site-content";
 
-const loginUrl = "https://app.wizfield.com";
+const loginUrl = "https://app.wizfield.com/login";
 
 function cx(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -83,7 +83,7 @@ export function MarketingFooter() {
     },
     {
       title: "Resources",
-      links: [["Docs", "https://docs.wizfield.com"]],
+      links: [["Docs", "https://docs.wizfield.com/"]],
     },
   ];
 
