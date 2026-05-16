@@ -1,26 +1,128 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --wf-base: #f8fafc;
+  --wf-indigo: #6366f1;
+  --wf-cyan: #00f0ff;
+  --wf-violet: #7000ff;
+  --wf-pink: #ff007a;
+  --wf-text-primary: #172033;
+  --wf-text-secondary: #53607a;
+  --wf-text-muted: #7c89a5;
+  --wf-text-inverse: #ffffff;
+  --wf-surface: rgba(255, 255, 255, 0.9);
+  --wf-surface-soft: rgba(255, 255, 255, 0.72);
+  --wf-glass: rgba(255, 255, 255, 0.68);
+  --wf-glass-strong: rgba(255, 255, 255, 0.82);
+  --wf-border-faint: rgba(99, 102, 241, 0.14);
+  --wf-border-soft: rgba(255, 255, 255, 0.78);
+  --wf-shadow-card: 0 18px 48px rgba(77, 91, 145, 0.1);
+  --wf-shadow-soft: 0 20px 60px rgba(77, 91, 145, 0.12);
+  --wf-glow-cyan: 0 0 14px rgba(0, 240, 255, 0.3), 0 0 34px rgba(0, 240, 255, 0.18);
+  --wf-glow-violet: 0 0 14px rgba(112, 0, 255, 0.28), 0 0 36px rgba(112, 0, 255, 0.18);
+  --wf-gradient-core: linear-gradient(135deg, var(--wf-cyan) 0%, var(--wf-indigo) 48%, var(--wf-violet) 100%);
+  --wf-gradient-soft: linear-gradient(135deg, rgba(0, 240, 255, 0.18), rgba(99, 102, 241, 0.15), rgba(112, 0, 255, 0.16));
+  --wf-radius-sm: 12px;
+  --wf-radius-md: 18px;
+  --wf-radius-lg: 24px;
+  --wf-radius-xl: 32px;
+  --background: var(--wf-base);
+  --foreground: var(--wf-text-primary);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(0, 240, 255, 0.08), transparent 28rem),
+    radial-gradient(circle at 88% 5%, rgba(112, 0, 255, 0.08), transparent 30rem),
+    var(--wf-base);
+  color: var(--wf-text-primary);
+}
+
+a {
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.wf-container {
+  width: min(100% - 2rem, 1180px);
+  margin-inline: auto;
+}
+
+.wf-wide-container {
+  width: min(100% - 2rem, 1380px);
+  margin-inline: auto;
+}
+
+.wf-section {
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+.wf-section-tight {
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+.wf-glass {
+  border: 1px solid var(--wf-border-soft);
+  background: var(--wf-glass);
+  box-shadow: var(--wf-shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(22px);
+}
+
+.wf-glass-strong {
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  background: var(--wf-glass-strong);
+  box-shadow: var(--wf-shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(28px);
+}
+
+.wf-panel {
+  border: 1px solid var(--wf-border-faint);
+  background: var(--wf-surface);
+  box-shadow: var(--wf-shadow-card);
+}
+
+.wf-cta-primary {
+  background: var(--wf-gradient-core);
+  color: var(--wf-text-inverse);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 16px 34px rgba(99, 102, 241, 0.26), 0 0 24px rgba(0, 240, 255, 0.16);
+}
+
+.wf-cta-secondary {
+  color: var(--wf-indigo);
+  border: 1px solid rgba(99, 102, 241, 0.16);
+  background: rgba(255, 255, 255, 0.76);
+  backdrop-filter: blur(18px);
+}
+
+.wf-hero-ambient {
+  position: absolute;
+  inset: -20% -10%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.2), transparent 34%),
+    radial-gradient(circle at 78% 28%, rgba(112, 0, 255, 0.17), transparent 36%),
+    radial-gradient(circle at 52% 78%, rgba(99, 102, 241, 0.11), transparent 40%);
+  filter: blur(2px);
 }

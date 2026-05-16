@@ -1,0 +1,14 @@
+import type { Metadata } from "next";
+import { PageRenderer } from "@/components/marketing";
+import { pages } from "@/lib/site-content";
+
+const page = pages["/multi-business"];
+
+export const metadata: Metadata = {
+  title: page.title,
+  description: page.description,
+};
+
+export default function MultiBusinessPage() {
+  return <PageRenderer page={page} />;
+}
