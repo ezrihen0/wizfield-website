@@ -16,9 +16,6 @@ export const metadata: Metadata = {
   },
   description:
     "WIZFIELD is the intelligent operating system for field-service businesses, connecting operations, intelligence, growth, and multi-business control.",
-  icons: {
-    icon: [{ url: "/brand/wizfield-mark.svg", type: "image/svg+xml" }],
-  },
 };
 
 export default function RootLayout({

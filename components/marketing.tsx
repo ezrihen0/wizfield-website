@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Cta, PageContent, Section, Visual } from "@/lib/site-content";
 import { navItems, pages, primaryCta } from "@/lib/site-content";
+import wizfieldLogo from "../wizfield.logo.png";
 
 const loginUrl = "https://app.wizfield.com/login";
 
@@ -129,12 +130,12 @@ function BrandLogo({ variant }: { variant: "header" | "footer" }) {
       )}
     >
       <Image
-        src="/brand/wizfield-logo-horizontal.svg"
+        src={wizfieldLogo}
         alt="WIZFIELD"
         fill
         priority={variant === "header"}
         sizes={variant === "header" ? "(min-width: 640px) 208px, 160px" : "160px"}
-        className="object-contain object-left"
+        className="object-cover object-center"
       />
     </span>
   );
