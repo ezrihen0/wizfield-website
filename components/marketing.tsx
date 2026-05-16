@@ -5,6 +5,8 @@ import Link from "next/link";
 import type { Cta, PageContent, Section, Visual } from "@/lib/site-content";
 import { navItems, pages, primaryCta } from "@/lib/site-content";
 
+const loginUrl = "https://app.wizfield.com";
+
 function cx(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
@@ -31,7 +33,7 @@ export function MarketingHeader() {
           ))}
         </nav>
         <div className="hidden items-center gap-3 lg:flex">
-          <Link href="/login" className="text-sm font-semibold text-[var(--wf-text-secondary)] transition hover:text-[var(--wf-indigo)]">
+          <Link href={loginUrl} className="text-sm font-semibold text-[var(--wf-text-secondary)] transition hover:text-[var(--wf-indigo)]">
             Log In
           </Link>
           <CtaButton cta={primaryCta} />
@@ -46,7 +48,7 @@ export function MarketingHeader() {
                 {item.label}
               </Link>
             ))}
-            <Link href="/login" className="rounded-2xl px-3 py-2 font-semibold text-[var(--wf-text-primary)] hover:bg-white/70">
+            <Link href={loginUrl} className="rounded-2xl px-3 py-2 font-semibold text-[var(--wf-text-primary)] hover:bg-white/70">
               Log In
             </Link>
             <CtaButton cta={primaryCta} className="w-full" />
@@ -76,7 +78,7 @@ export function MarketingFooter() {
         ["Pricing", "/pricing"],
         ["Contact", "/contact"],
         ["Start Trial", "/pricing"],
-        ["Log In", "/login"],
+        ["Log In", loginUrl],
       ],
     },
     {
