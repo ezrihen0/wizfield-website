@@ -12,6 +12,7 @@ export type Visual = {
 };
 
 export type Section = {
+  id?: string;
   eyebrow?: string;
   title: string;
   body?: string;
@@ -36,19 +37,19 @@ export const navItems = [
   { label: "Growth Center", href: "/growth-center" },
   { label: "Language Store", href: "/language-store" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Docs", href: "/docs" },
+  { label: "Docs", href: "https://docs.wizfield.com" },
 ];
 
 export const primaryCta: Cta = { label: "Start Trial", href: "/pricing", variant: "primary" };
 export const contactCta: Cta = { label: "Contact Sales", href: "/contact", variant: "secondary" };
 
-const finalCta = (title = "Operate smarter. Grow further."): Section => ({
+const finalCta = (title = "Operate smarter. Grow further.", visualId = "wf-home-final-cta-w-motif"): Section => ({
   eyebrow: "Ready for Operational Clarity?",
   title,
   body: "Bring calls, jobs, customers, estimates, invoices, communication, intelligence, growth workflows, and workspace control into one field-service operating system.",
   ctas: [primaryCta, { label: "View Pricing", href: "/pricing", variant: "secondary" }],
   visual: {
-    id: "wf-home-final-cta-w-motif",
+    id: visualId,
     title: "Final CTA W Intelligence Motif",
     summary: "Subtle connected-node W graph background for a bright conversion panel.",
     kind: "motif",
@@ -141,7 +142,7 @@ export const homePage: PageContent = {
       items: [
         { title: "Business Brain", body: "Highlights important operating signals so your team knows what needs review.", meta: "Workspace-scoped signals. Human action remains in control." },
         { title: "Operator Copilot", body: "Helps create customer SMS follow-up drafts from call context.", meta: "Draft, review, send. No silent outbound messaging." },
-        { title: "Voice Intake Intelligence - Pilot", body: "A bounded voice intake pilot for guided call handling, clarification, and human escalation paths.", meta: "Pilot program. No guaranteed price, time, or booking commitments." },
+        { title: "Voice Intake Intelligence — Pilot", body: "A bounded voice intake pilot for guided call handling, clarification, and human escalation paths.", meta: "Pilot program. No guaranteed price, time, or booking commitments." },
       ],
       ctas: [{ label: "Explore WIZFIELD AI", href: "/ai", variant: "secondary" }],
       visual: {
@@ -193,7 +194,7 @@ export const homePage: PageContent = {
     },
     {
       eyebrow: "Multi-Business Control",
-      title: "Run one business - or several - without losing context.",
+      title: "Run one business — or several — without losing context.",
       body: "WIZFIELD supports owners who operate multiple service businesses through explicit workspace switching, separated organization context, and shared billing architecture designed for scale.",
       bullets: [
         "One user identity can access multiple business workspaces.",
@@ -212,7 +213,7 @@ export const homePage: PageContent = {
     },
     {
       eyebrow: "Operational Journey",
-      title: "From first call to paid invoice - without losing the thread.",
+      title: "From first call to paid invoice — without losing the thread.",
       body: "WIZFIELD keeps the operating context connected as work moves from intake to customer record, job, estimate, approval, invoice, follow-up, and growth opportunity.",
       flow: ["Call / Lead", "Customer", "Job", "Estimate", "Approval", "Invoice", "Follow-up", "Growth Opportunity"],
       visual: {
@@ -250,7 +251,7 @@ export const homePage: PageContent = {
       eyebrow: "Product Confidence",
       title: "Built like a real platform. Documented like one.",
       body: "WIZFIELD includes product documentation so serious buyers and operators can understand the system, its workflows, and its operating boundaries clearly.",
-      ctas: [{ label: "Explore Docs", href: "/docs", variant: "secondary" }, primaryCta],
+      ctas: [{ label: "Explore Docs", href: "https://docs.wizfield.com", variant: "secondary" }, primaryCta],
       visual: {
         id: "wf-home-docs-preview-card",
         title: "Docs Preview Card",
@@ -314,7 +315,7 @@ const platformSections: Section[] = [
   },
   {
     eyebrow: "Workspace Control",
-    title: "Built for one business - and structured for more.",
+    title: "Built for one business — and structured for more.",
     body: "WIZFIELD supports owners who operate multiple businesses through explicit workspace switching and separated business context.",
     bullets: ["One user identity can access multiple workspaces.", "The active workspace controls the operating view.", "Business data stays separated by organization."],
     visual: { id: "wf-platform-multibusiness-awareness-visual", title: "Multi-Business Awareness Visual", summary: "Workspace switcher changing active dashboard context.", kind: "mockup" },
@@ -333,7 +334,7 @@ const platformSections: Section[] = [
     visual: { id: "wf-platform-intelligence-layers-triple-card", title: "Intelligence Layers Triple Card", summary: "AI, Growth Center, and Language Store cards.", kind: "cards" },
     variant: "cards",
   },
-  finalCta("Run the daily work from one operating system."),
+  finalCta("Run the daily work from one operating system.", "wf-platform-final-cta-product-motif"),
 ];
 
 const aiSections: Section[] = [
@@ -343,7 +344,7 @@ const aiSections: Section[] = [
     body: "WIZFIELD AI helps operators review workspace-scoped signals, prepare customer follow-up drafts, confirm controlled sends, observe replies, and explore bounded voice intake without pretending to run the business for you.",
     flow: ["Human review stays in control", "Voice is a pilot", "No silent outbound messaging"],
     ctas: [primaryCta, { label: "Explore Platform", href: "/platform", variant: "secondary" }],
-    visual: { id: "wf-ai-hero-intelligence-surface", title: "AI Hero Intelligence Surface", summary: "Business Brain, Operator Copilot, and Voice Intake Intelligence - Pilot.", kind: "mockup" },
+    visual: { id: "wf-ai-hero-intelligence-surface", title: "AI Hero Intelligence Surface", summary: "Business Brain, Operator Copilot, and Voice Intake Intelligence — Pilot.", kind: "mockup" },
     variant: "hero",
   },
   {
@@ -387,11 +388,11 @@ const aiSections: Section[] = [
     variant: "split",
   },
   {
-    eyebrow: "Voice Intake Intelligence - Pilot",
+    eyebrow: "Voice Intake Intelligence — Pilot",
     title: "A bounded voice intake pilot for guided call handling.",
     body: "Voice Intake Intelligence is a pilot capability for guided call handling, clarification, and escalation. It is not a full phone staff replacement.",
     bullets: ["Pilot program.", "Script-bound handling.", "Human escalation path.", "No guaranteed price, time, or booking commitments."],
-    visual: { id: "wf-ai-voice-intake-pilot-call-capsule", title: "Voice Intake Intelligence - Pilot Call Capsule", summary: "Inbound call capsule, script boundary, escalation path.", kind: "cards" },
+    visual: { id: "wf-ai-voice-intake-pilot-call-capsule", title: "Voice Intake Intelligence — Pilot Call Capsule", summary: "Inbound call capsule, script boundary, escalation path.", kind: "cards" },
     variant: "split",
   },
   {
@@ -402,7 +403,7 @@ const aiSections: Section[] = [
     visual: { id: "wf-ai-boundaries-trust-panel", title: "AI Boundaries / Trust Panel", summary: "Human review, no silent outbound, Pilot, workspace-scoped.", kind: "trust" },
     variant: "cards",
   },
-  finalCta("Add intelligence around the work without giving up control."),
+  finalCta("Add intelligence around the work without giving up control.", "wf-ai-final-cta-motif"),
 ];
 
 const growthSections: Section[] = [
@@ -482,7 +483,7 @@ const growthSections: Section[] = [
     visual: { id: "wf-growth-internal-analytics-panel", title: "Internal Analytics Panel", summary: "Internal summary metrics with approximate funnel labels.", kind: "mockup" },
     variant: "split",
   },
-  finalCta("Build marketing work from real business activity."),
+  finalCta("Build marketing work from real business activity.", "wf-growth-final-cta-motif"),
 ];
 
 const languageSections: Section[] = [
@@ -550,7 +551,7 @@ const languageSections: Section[] = [
     visual: { id: "wf-language-plan-availability-card", title: "Plan Availability Card", summary: "Starter English only, Pro/Business include capacity, add-ons in the same billing relationship.", kind: "cards" },
     variant: "split",
   },
-  finalCta("Give your team language flexibility while protecting customer clarity."),
+  finalCta("Give your team language flexibility while protecting customer clarity.", "wf-language-final-cta-motif"),
 ];
 
 const multiSections: Section[] = [
@@ -615,9 +616,9 @@ const multiSections: Section[] = [
       { title: "Business", body: "For larger or more complex operators that need expanded, sales-assisted structure.", meta: "Contact Sales" },
     ],
     visual: { id: "wf-multibusiness-plan-fit-structure", title: "Plan Fit Structure Visual", summary: "Starter, Pro, Business structure cards.", kind: "cards" },
-    variant: "pricing",
+    variant: "cards",
   },
-  finalCta("Run one business - or several - without losing context."),
+  finalCta("Run one business — or several — without losing context.", "wf-multibusiness-final-cta-motif"),
 ];
 
 const pricingSections: Section[] = [
@@ -625,18 +626,19 @@ const pricingSections: Section[] = [
     eyebrow: "Pricing",
     title: "Choose the operating system plan that fits how your service business runs.",
     body: "Start with the structure your business needs today. Starter and Pro support self-serve trial paths. Business is designed for larger or more complex operators that need sales-assisted structure.",
-    flow: ["Prices: [PRICE TBD - OWNER INPUT REQUIRED]"],
-    ctas: [primaryCta, contactCta],
+    flow: ["Prices: [PRICE TBD — OWNER INPUT REQUIRED]"],
+    ctas: [{ label: "Start Trial", href: "#plans", variant: "primary" }, contactCta],
     visual: { id: "wf-pricing-hero-plan-structure-cue", title: "Pricing Hero Plan Structure Cue", summary: "Clean Starter, Pro, Business plan structure cue.", kind: "cards" },
     variant: "hero",
   },
   {
+    id: "plans",
     eyebrow: "Plans",
     title: "Starter, Pro, and Business.",
     body: "Compare by operating need, workspace structure, and sales path.",
     items: [
-      { title: "Starter", body: "For one service business getting organized in one operating system.", meta: "1 business | [PRICE TBD - OWNER INPUT REQUIRED]" },
-      { title: "Pro", body: "For growing operators who need more room, more capability, and up to three businesses.", meta: "Recommended for growing teams | [PRICE TBD - OWNER INPUT REQUIRED]" },
+      { title: "Starter", body: "For one service business getting organized in one operating system.", meta: "1 business | [PRICE TBD — OWNER INPUT REQUIRED]" },
+      { title: "Pro", body: "For growing operators who need more room, more capability, and up to three businesses.", meta: "Recommended for growing teams | [PRICE TBD — OWNER INPUT REQUIRED]" },
       { title: "Business", body: "For larger or more complex operators that need expanded structure and sales-assisted setup.", meta: "Contact Sales" },
     ],
     visual: { id: "wf-pricing-starter-pro-business-card-set", title: "Starter / Pro / Business Pricing Card Set", summary: "Pro recommended treatment with safe placeholders.", kind: "cards" },
@@ -695,7 +697,7 @@ const pricingSections: Section[] = [
     visual: { id: "wf-pricing-faq-surface-treatment", title: "FAQ Surface Treatment", summary: "Calm expandable FAQ surface.", kind: "trust" },
     variant: "faq",
   },
-  finalCta("Start with the plan that matches how you operate."),
+  finalCta("Start with the plan that matches how you operate.", "wf-pricing-final-cta-motif"),
 ];
 
 const featuresSections: Section[] = [
@@ -779,7 +781,7 @@ const featuresSections: Section[] = [
     visual: { id: "wf-features-related-page-routing-cards", title: "Related Page Routing Cards", summary: "Cards linking to deeper pages.", kind: "cards" },
     variant: "cards",
   },
-  finalCta("Start with the operating system built for field-service work."),
+  finalCta("Start with the operating system built for field-service work.", "wf-features-final-cta-motif"),
 ];
 
 const contactSections: Section[] = [
@@ -835,11 +837,11 @@ const contactSections: Section[] = [
     variant: "cta",
   },
   {
-    eyebrow: "Success State Preview",
-    title: "Inquiry received.",
-    body: "Thanks for contacting WIZFIELD. Your details will help route the conversation to the right next step.",
-    ctas: [{ label: "View Pricing", href: "/pricing", variant: "secondary" }, { label: "Explore Docs", href: "/docs", variant: "secondary" }],
-    visual: { id: "wf-contact-post-submit-success-state", title: "Post-Submit Success State Visual", summary: "Static success-state visual only until backend is wired.", kind: "trust" },
+    eyebrow: "Contact Routing",
+    title: "Form submission wiring remains a launch integration item.",
+    body: "Until the backend destination is connected, the contact form stays honest about its preview state and does not claim delivery.",
+    ctas: [{ label: "View Pricing", href: "/pricing", variant: "secondary" }, { label: "Explore Docs", href: "https://docs.wizfield.com", variant: "secondary" }],
+    visual: { id: "wf-contact-post-submit-success-state", title: "Post-Submit Success State Visual", summary: "Static success-state visual reserved until backend is wired.", kind: "trust" },
     variant: "split",
   },
 ];

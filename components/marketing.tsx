@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import type { Cta, PageContent, Section, Visual } from "@/lib/site-content";
 import { navItems, pages, primaryCta } from "@/lib/site-content";
@@ -78,7 +81,7 @@ export function MarketingFooter() {
     },
     {
       title: "Resources",
-      links: [["Docs", "/docs"]],
+      links: [["Docs", "https://docs.wizfield.com"]],
     },
   ];
 
@@ -153,7 +156,7 @@ function MarketingSection({ section, index }: { section: Section; index: number 
 
   return (
     <section
-      id={index === 2 ? "platform-thesis" : undefined}
+      id={section.id ?? (index === 2 ? "platform-thesis" : undefined)}
       className={cx("relative overflow-hidden", isHero ? "wf-section" : isCta ? "py-20" : "wf-section-tight")}
     >
       {(isHero || isCta) && <div className="wf-hero-ambient" />}
@@ -161,14 +164,22 @@ function MarketingSection({ section, index }: { section: Section; index: number 
         <div className={cx(split ? "grid items-center gap-10 lg:grid-cols-[0.94fr_1.06fr]" : "mx-auto max-w-5xl text-center")}>
           <div className={cx(!split && "mx-auto max-w-3xl")}>
             {section.eyebrow && <SectionEyebrow>{section.eyebrow}</SectionEyebrow>}
-            <h1
-              className={cx(
-                "mt-4 font-black tracking-[-0.045em] text-[var(--wf-text-primary)]",
-                isHero ? "text-5xl leading-[0.98] md:text-7xl" : "text-3xl leading-tight md:text-5xl",
-              )}
-            >
-              {section.title}
-            </h1>
+            {isHero ? (
+              <h1
+                className={cx(
+                  "mt-4 font-black tracking-[-0.045em] text-[var(--wf-text-primary)]",
+                  "text-5xl leading-[0.98] md:text-7xl",
+                )}
+              >
+                {section.title}
+              </h1>
+            ) : (
+              <h2
+                className="mt-4 text-3xl font-black leading-tight tracking-[-0.045em] text-[var(--wf-text-primary)] md:text-5xl"
+              >
+                {section.title}
+              </h2>
+            )}
             {section.body && <p className="mt-5 max-w-3xl text-lg leading-8 text-[var(--wf-text-secondary)]">{section.body}</p>}
             {section.bullets && <BulletList bullets={section.bullets} />}
             {section.flow && <FlowRail steps={section.flow} />}
@@ -184,14 +195,14 @@ function MarketingSection({ section, index }: { section: Section; index: number 
           {section.variant === "form" ? <ContactFormPanel /> : section.visual ? <AssetPlaceholder visual={section.visual} large={isHero} /> : null}
         </div>
 
-        {section.items && <CardGrid items={section.items} />}
+        {section.items && section.variant !== "pricing" && <CardGrid items={section.items} />}
         {section.variant === "pricing" && <PricingCards />}
       </div>
     </section>
   );
 }
 
-export function SectionEyebrow({ children }: { children: React.ReactNode }) {
+export function SectionEyebrow({ children }: { children: ReactNode }) {
   return <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--wf-indigo)]">{children}</p>;
 }
 
@@ -266,9 +277,9 @@ function AssetPlaceholder({ visual, large = false }: { visual: Visual; large?: b
 
 function PricingCards() {
   const plans = [
-    { title: "Starter", meta: "1 business", body: "For one service business getting organized in one operating system.", cta: "Start Trial" },
-    { title: "Pro", meta: "Up to 3 businesses", body: "For growing operators who need more room, more capability, and up to three businesses.", cta: "Start Trial", featured: true },
-    { title: "Business", meta: "Contact Sales", body: "For larger or more complex operators that need expanded structure and sales-assisted setup.", cta: "Contact Sales" },
+    { title: "Starter", meta: "1 business", price: "[PRICE TBD — OWNER INPUT REQUIRED]", body: "For one service business getting organized in one operating system.", cta: "Start Trial" },
+    { title: "Pro", meta: "Up to 3 businesses", price: "[PRICE TBD — OWNER INPUT REQUIRED]", body: "For growing operators who need more room, more capability, and up to three businesses.", cta: "Start Trial", featured: true },
+    { title: "Business", meta: "Contact Sales", price: "Contact Sales", body: "For larger or more complex operators that need expanded structure and sales-assisted setup.", cta: "Contact Sales" },
   ];
 
   return (
@@ -284,7 +295,7 @@ function PricingCards() {
           {plan.featured && <p className="mb-4 inline-flex rounded-full bg-[rgba(99,102,241,0.1)] px-3 py-1 text-xs font-black text-[var(--wf-indigo)]">Recommended for growing teams</p>}
           <h3 className="text-2xl font-black">{plan.title}</h3>
           <p className="mt-3 text-sm font-bold text-[var(--wf-indigo)]">{plan.meta}</p>
-          <p className="mt-3 text-2xl font-black tracking-tight">[PRICE TBD - OWNER INPUT REQUIRED]</p>
+          <p className="mt-3 text-2xl font-black tracking-tight">{plan.price}</p>
           <p className="mt-4 leading-7 text-[var(--wf-text-secondary)]">{plan.body}</p>
           <CtaButton cta={{ label: plan.cta, href: plan.cta === "Contact Sales" ? "/contact" : "/pricing", variant: plan.cta === "Contact Sales" ? "secondary" : "primary" }} className="mt-6 w-full" />
         </article>
@@ -294,23 +305,71 @@ function PricingCards() {
 }
 
 function ContactFormPanel() {
-  const fields = ["Name", "Work Email", "Company / Business Name", "Phone", "Inquiry Type", "Number of Businesses / Workspaces", "Approximate Team Size", "Message"];
+  const [status, setStatus] = useState<string | null>(null);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStatus("Form submission wiring will be connected before launch. No inquiry has been sent yet.");
+  }
 
   return (
-    <div className="rounded-[var(--wf-radius-xl)] p-6 wf-panel">
-      <p className="mb-4 text-sm font-bold text-[var(--wf-indigo)]">Non-functional first-pass form UI. Backend destination remains an owner input.</p>
+    <form className="rounded-[var(--wf-radius-xl)] p-6 wf-panel" onSubmit={handleSubmit}>
+      <p id="contact-form-note" className="mb-4 text-sm font-bold text-[var(--wf-indigo)]">
+        First-pass form UI. Backend destination remains an owner input, and this form will not send until wiring is connected.
+      </p>
       <div className="grid gap-4">
-        {fields.map((field) => (
-          <label key={field} className="grid gap-2 text-sm font-bold text-[var(--wf-text-primary)]">
-            {field}
-            <span className="rounded-2xl border border-[var(--wf-border-faint)] bg-white/80 px-4 py-3 text-sm font-normal text-[var(--wf-text-muted)]">
-              {field === "Message" ? "Tell us what you are trying to evaluate or solve." : `Enter ${field.toLowerCase()}`}
-            </span>
-          </label>
-        ))}
+        <label className="grid gap-2 text-sm font-bold text-[var(--wf-text-primary)]">
+          Name
+          <input className="rounded-2xl border border-[var(--wf-border-faint)] bg-white/80 px-4 py-3 text-sm font-normal text-[var(--wf-text-primary)]" name="name" type="text" autoComplete="name" aria-describedby="contact-form-note" placeholder="Enter your name" />
+        </label>
+        <label className="grid gap-2 text-sm font-bold text-[var(--wf-text-primary)]">
+          Work Email
+          <input className="rounded-2xl border border-[var(--wf-border-faint)] bg-white/80 px-4 py-3 text-sm font-normal text-[var(--wf-text-primary)]" name="email" type="email" autoComplete="email" placeholder="Enter your work email" />
+        </label>
+        <label className="grid gap-2 text-sm font-bold text-[var(--wf-text-primary)]">
+          Company / Business Name
+          <input className="rounded-2xl border border-[var(--wf-border-faint)] bg-white/80 px-4 py-3 text-sm font-normal text-[var(--wf-text-primary)]" name="company" type="text" autoComplete="organization" placeholder="Enter your company or business name" />
+        </label>
+        <label className="grid gap-2 text-sm font-bold text-[var(--wf-text-primary)]">
+          Phone
+          <input className="rounded-2xl border border-[var(--wf-border-faint)] bg-white/80 px-4 py-3 text-sm font-normal text-[var(--wf-text-primary)]" name="phone" type="tel" autoComplete="tel" placeholder="Enter your phone number" />
+        </label>
+        <label className="grid gap-2 text-sm font-bold text-[var(--wf-text-primary)]">
+          Inquiry Type
+          <select className="rounded-2xl border border-[var(--wf-border-faint)] bg-white/80 px-4 py-3 text-sm font-normal text-[var(--wf-text-primary)]" name="inquiryType" defaultValue="">
+            <option value="" disabled>
+              Select an inquiry type
+            </option>
+            <option>Business Plan Interest</option>
+            <option>Multi-Business Operation</option>
+            <option>Larger Team / Setup Question</option>
+            <option>Partnership Inquiry</option>
+            <option>Product Question</option>
+            <option>Other Commercial Inquiry</option>
+          </select>
+        </label>
+        <label className="grid gap-2 text-sm font-bold text-[var(--wf-text-primary)]">
+          Number of Businesses / Workspaces
+          <input className="rounded-2xl border border-[var(--wf-border-faint)] bg-white/80 px-4 py-3 text-sm font-normal text-[var(--wf-text-primary)]" name="businessCount" type="text" placeholder="Enter number of businesses or workspaces" />
+        </label>
+        <label className="grid gap-2 text-sm font-bold text-[var(--wf-text-primary)]">
+          Approximate Team Size
+          <input className="rounded-2xl border border-[var(--wf-border-faint)] bg-white/80 px-4 py-3 text-sm font-normal text-[var(--wf-text-primary)]" name="teamSize" type="text" placeholder="Enter approximate team size" />
+        </label>
+        <label className="grid gap-2 text-sm font-bold text-[var(--wf-text-primary)]">
+          Message
+          <textarea className="min-h-32 rounded-2xl border border-[var(--wf-border-faint)] bg-white/80 px-4 py-3 text-sm font-normal text-[var(--wf-text-primary)]" name="message" placeholder="Tell us what you are trying to evaluate or solve." />
+        </label>
       </div>
-      <CtaButton cta={{ label: "Send Inquiry", href: "#", variant: "primary" }} className="mt-6 w-full" />
-    </div>
+      {status && (
+        <p className="mt-5 rounded-2xl border border-[var(--wf-border-faint)] bg-white/80 p-4 text-sm font-semibold text-[var(--wf-text-secondary)]">
+          {status}
+        </p>
+      )}
+      <button type="submit" className="mt-6 w-full wf-cta-primary inline-flex min-h-11 items-center justify-center rounded-full px-5 py-2.5 text-sm font-bold transition duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-[rgba(99,102,241,0.22)]">
+        Send Inquiry
+      </button>
+    </form>
   );
 }
 
